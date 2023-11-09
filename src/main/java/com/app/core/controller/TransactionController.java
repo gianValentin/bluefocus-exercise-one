@@ -1,16 +1,22 @@
 package com.app.core.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.core.entity.dto.transaction.GenerateTransactionDTO;
+import com.app.core.entity.dto.transaction.TransactionAuditDTO;
 import com.app.core.entity.dto.transaction.TransactionDTO;
-import com.app.core.security.service.TransactionService;
+import com.app.core.service.TransactionService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -25,5 +31,18 @@ public class TransactionController {
 		return ResponseEntity.status(HttpStatus.OK).body(transaction);
 	}
 	
+	@GetMapping("/{id}")
+	public ResponseEntity<TransactionDTO> getTransactionById(@PathVariable Integer id){
+		return ResponseEntity.status(HttpStatus.OK).body(transactionService.findById(id));
+	}
 	
+	@PutMapping("/{id}")
+	public ResponseEntity<TransactionDTO> updateTransaction(@PathVariable Integer id, @RequestBody GenerateTransactionDTO req){
+		return ResponseEntity.status(HttpStatus.OK).body(transactionService.update(id, req.getOriginCurrency(),req.getFateCurrency(), req.getAmount()));
+	}
+	
+	@GetMapping("/audit")
+	public ResponseEntity<List<TransactionAuditDTO>> getAudit(){
+		return ResponseEntity.status(HttpStatus.OK).body(transactionService.audit());
+	}
 }

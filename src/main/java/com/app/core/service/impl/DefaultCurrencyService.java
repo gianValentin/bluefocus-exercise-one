@@ -1,4 +1,4 @@
-package com.app.core.security.service.impl;
+package com.app.core.service.impl;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.app.core.entity.dto.currency.CurrencyDTO;
 import com.app.core.entity.model.CurrencyModel;
 import com.app.core.security.repository.CurrencyRepository;
-import com.app.core.security.service.CurrencyService;
+import com.app.core.service.CurrencyService;
 
 import lombok.RequiredArgsConstructor;
 

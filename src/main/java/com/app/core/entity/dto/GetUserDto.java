@@ -12,8 +12,7 @@ import lombok.NoArgsConstructor;
 public class GetUserDto{
 		Long id;		
 		String firstname;		
-		String username;		
-		String password;		
+		String username;				
 		String lastname;	
 		String email;
 		Date createAt;

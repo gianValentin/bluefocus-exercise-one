@@ -1,4 +1,4 @@
-package com.app.core.security.service;
+package com.app.core.service;
 
 import java.util.List;
 

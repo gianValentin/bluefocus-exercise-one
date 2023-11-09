@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.core.entity.dto.currency.CurrencyDTO;
-import com.app.core.security.service.CurrencyService;
+import com.app.core.service.CurrencyService;
 
 import lombok.RequiredArgsConstructor;
 

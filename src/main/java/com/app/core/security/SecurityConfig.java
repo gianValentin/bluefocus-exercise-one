@@ -27,27 +27,23 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-	private static final String[] WHITE_LIST_URL = { "/api/v1/auth/**", "/v2/api-docs",
-			"/v3/api-docs", "/v3/api-docs/**", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
-			"/configuration/security", "/swagger-ui/**", "/webjars/**", "/swagger-ui.html" };
-
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 	private final AuthenticationProvider authenticationProvider;
 	private final LogoutHandler logoutHandler;
 
 	@Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, HandlerMappingIntrospector introspector) throws Exception {
+	SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, HandlerMappingIntrospector introspector)
+			throws Exception {
 		MvcRequestMatcher.Builder mvcRequestMatcher = new MvcRequestMatcher.Builder(introspector);
-		
+
 		return httpSecurity.csrf(csrf -> {
 			csrf.ignoringRequestMatchers(PathRequest.toH2Console()).disable();
 		}).authorizeHttpRequests(authResquest -> {
-			
+
 			authResquest.requestMatchers(PathRequest.toH2Console()).permitAll();
-			
-			/* authResquest.requestMatchers(WHITE_LIST_URL).permitAll(); */
-			authResquest.requestMatchers(mvcRequestMatcher.pattern("/api/**")).permitAll();
-			
+
+			authResquest.requestMatchers(mvcRequestMatcher.pattern("/api/v1/auth/**")).permitAll();
+
 			authResquest.anyRequest().authenticated();
 		}).sessionManagement(
 				sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -57,9 +53,8 @@ public class SecurityConfig {
 					logout.addLogoutHandler(logoutHandler);
 					logout.logoutSuccessHandler(
 							(request, response, authentication) -> SecurityContextHolder.clearContext());
-				})
-				 .cors(Customizer.withDefaults())
-				.build();
+				}).headers(headers -> headers.frameOptions((frameOptions) -> frameOptions.disable()))
+				.cors(Customizer.withDefaults()).build();
 	}
 
 	@Bean

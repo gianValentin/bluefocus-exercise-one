@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.app.core.entity.model.UserModel;
 
 public interface UserRepository extends JpaRepository<UserModel, Long>{
-	Optional<UserModel> findByFirstname(final String name);
+	Optional<UserModel> findByFirstname(final String name);	
+	Optional<UserModel> findByUsername(final String username);
 }

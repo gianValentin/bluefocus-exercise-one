@@ -1,8 +1,11 @@
-package com.app.core.service;
+package com.app.core.service.impl;
 
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -10,6 +13,7 @@ import org.springframework.util.Assert;
 import com.app.core.entity.model.UserModel;
 import com.app.core.exception.CJNotFoundException;
 import com.app.core.repository.UserRepository;
+import com.app.core.service.UserService;
 import com.app.core.utils.CustomCodeException;
 
 import lombok.AllArgsConstructor;
@@ -19,6 +23,7 @@ import lombok.AllArgsConstructor;
 public class DefaultUserService implements UserService {
 
 	private final UserRepository userRepository;
+	
 
 	@Override
 	@Transactional(readOnly = true)
@@ -73,6 +78,18 @@ public class DefaultUserService implements UserService {
 	@Transactional(readOnly = true)
 	public Page<UserModel> finadAll(Pageable pageable) {
 		return userRepository.findAll(pageable);
+	}
+	
+	@Override
+	public UserModel getSessionUser() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		if(authentication instanceof AnonymousAuthenticationToken) {
+			return null;
+		}		
+		
+		return userRepository.findByUsername(authentication.getName())
+				.orElseThrow(() -> new CJNotFoundException(CustomCodeException.CODE_404 , "user not found"));
 	}
 
 }
